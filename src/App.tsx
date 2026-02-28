@@ -3,7 +3,7 @@ import {
   Maximize2, Minimize2, Search, Download, 
   CheckCircle2, ListFilter, Copy,
   Database, PanelRightClose, PanelRightOpen, ChevronDown, ChevronUp,
-  Pin, PinOff, Target, FileText
+  Pin, PinOff, Target, FileText, X
 } from 'lucide-react';
 
 // --- Mock Data ---
@@ -175,13 +175,6 @@ export default function App() {
       
       {/* Hover view: Actions */}
       <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-white pl-2">
-        <button 
-          onClick={(e) => scrollToColumn(col.name, e)}
-          className="p-1 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
-          title="定位到该列"
-        >
-          <Target className="w-3.5 h-3.5" />
-        </button>
         <button 
           onClick={(e) => togglePin(col.id, e)}
           className={`p-1 rounded transition-colors ${isPinned ? 'text-blue-600 hover:bg-blue-50' : 'text-gray-400 hover:text-blue-600 hover:bg-blue-50'}`}
@@ -428,8 +421,17 @@ export default function App() {
                       placeholder="搜索列..." 
                       value={searchCol}
                       onChange={(e) => setSearchCol(e.target.value)}
-                      className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-shadow bg-gray-50 focus:bg-white" 
+                      className="w-full pl-8 pr-8 py-1.5 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-shadow bg-gray-50 focus:bg-white" 
                     />
+                    {searchCol && (
+                      <button 
+                        onClick={() => setSearchCol('')}
+                        className="absolute right-2 top-2 text-gray-400 hover:text-gray-600 transition-colors"
+                        title="清空搜索"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    )}
                   </div>
                 </div>
                 
@@ -443,8 +445,17 @@ export default function App() {
                   {/* Pinned Columns Section */}
                   {pinnedList.length > 0 && (
                     <div className="mb-2">
-                      <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider px-2 py-1 mb-1 flex items-center gap-1">
-                        <Pin className="w-3 h-3" /> 已置顶
+                      <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider px-2 py-1 mb-1 flex items-center justify-between">
+                        <div className="flex items-center gap-1">
+                          <Pin className="w-3 h-3" /> 已置顶
+                        </div>
+                        <button 
+                          onClick={() => setPinnedColumns(new Set())}
+                          className="text-gray-400 hover:text-blue-600 transition-colors p-0.5 rounded hover:bg-blue-50"
+                          title="取消所有置顶"
+                        >
+                          <PinOff className="w-3 h-3" />
+                        </button>
                       </div>
                       <div className="space-y-0.5">
                         {pinnedList.map(col => renderColumnItem(col, true))}
